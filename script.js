@@ -266,50 +266,88 @@
             document.body.removeChild(tempInput);
         }
 
-        // 8. GUESTBOOK WISHES
+        // 8. GUESTBOOK WISHES (Firestore)
         function escapeHtml(str) {
             const div = document.createElement("div");
-            div.textContent = str;
+            div.textContent = String(str ?? "");
             return div.innerHTML;
+        }
+
+        function formatWishTime(value) {
+            if (!value) return "Vừa gửi";
+            const date = value.toDate ? value.toDate() : new Date(value);
+            if (Number.isNaN(date.getTime())) return "Vừa gửi";
+            return date.toLocaleString("vi-VN", {
+                day: "2-digit", month: "2-digit", year: "numeric",
+                hour: "2-digit", minute: "2-digit"
+            });
         }
 
         function renderWishesList() {
             const container = document.getElementById("wishes-list-container");
             document.getElementById("wishes-count-badge").textContent = `${wishes.length} lời chúc`;
+
+            if (!wishes.length) {
+                container.innerHTML = '<p class="text-sm text-muted text-center py-6">Chưa có lời chúc nào. Hãy là người gửi lời chúc đầu tiên nhé!</p>';
+                return;
+            }
+
             container.innerHTML = wishes.map(w => `
                 <div class="p-4 rounded-2xl bg-cream border border-champagne/20">
                     <div class="flex flex-wrap items-center justify-between gap-2 mb-1.5">
                         <span class="font-bold text-sm text-charcoal">${escapeHtml(w.name)}</span>
                         <span class="px-2.5 py-0.5 rounded-full bg-terracotta/10 text-terracotta text-[11px] font-medium">${escapeHtml(w.attend)}</span>
                     </div>
-                    <p class="text-sm text-charcoal/85 leading-relaxed">${escapeHtml(w.message)}</p>
-                    <span class="block text-[11px] text-muted mt-2">${escapeHtml(w.time || "Vừa xong")}</span>
+                    <p class="text-sm text-charcoal/85 leading-relaxed whitespace-pre-wrap">${escapeHtml(w.message)}</p>
+                    <span class="block text-[11px] text-muted mt-2">${escapeHtml(formatWishTime(w.createdAt))}</span>
                 </div>
             `).join("");
         }
 
-        document.getElementById("guestbook-form").addEventListener("submit", function (e) {
+        async function startWishesListener() {
+            try {
+                const firebase = await window.firebaseReady;
+                firebase.listenToWishes((newWishes) => {
+                    wishes = newWishes;
+                    renderWishesList();
+                });
+            } catch (error) {
+                console.error("Không thể tải lời chúc từ Firestore:", error);
+                showToast("Chưa tải được lời chúc. Vui lòng tải lại trang.");
+            }
+        }
+
+        document.getElementById("guestbook-form").addEventListener("submit", async function (e) {
             e.preventDefault();
+            const form = this;
+            const submitButton = form.querySelector('button[type="submit"]');
             const name = document.getElementById("guest-name-input").value.trim();
             const attend = document.getElementById("guest-attend-input").value;
             const message = document.getElementById("guest-message-input").value.trim();
+
             if (!name || !message) return;
+            if (name.length > 80 || message.length > 1000) {
+                showToast("Tên tối đa 80 ký tự, lời chúc tối đa 1000 ký tự.");
+                return;
+            }
 
-            wishes.unshift({
-                name,
-                attend,
-                message,
-                time: "Vừa gửi xong"
-            });
-
+            submitButton.disabled = true;
+            submitButton.textContent = "Đang gửi...";
             try {
-                localStorage.setItem("custom_wedding_wishes_v2", JSON.stringify(wishes));
-            } catch (err) {}
-
-            renderWishesList();
-            this.reset();
-            showToast("Cảm ơn bạn đã gửi lời chúc mừng!");
+                const firebase = await window.firebaseReady;
+                await firebase.addWish({ name, attend, message });
+                form.reset();
+                showToast("Cảm ơn bạn đã gửi lời chúc mừng!");
+            } catch (error) {
+                console.error("Lỗi gửi lời chúc:", error);
+                showToast("Gửi lời chúc chưa thành công. Vui lòng thử lại.");
+            } finally {
+                submitButton.disabled = false;
+                submitButton.textContent = "Gửi Lời Chúc Ngay";
+            }
         });
+
+        window.addEventListener("DOMContentLoaded", startWishesListener);
 
         // 9. BACKGROUND MUSIC ENGINE (WEB AUDIO API PIANO + CUSTOM FILE/URL)
         let audioCtx = null;
