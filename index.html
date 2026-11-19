@@ -54,9 +54,9 @@
     <header id="hero-section" class="relative min-h-screen w-full flex items-center justify-center overflow-hidden">
         <!-- Cover Image -->
         <img id="hero-bg-img"
-             src="assets/hero-bg.jpg"
+             src="./assets/hero-bg.jpg"
+             fetchpriority="high"
              alt="Ảnh bìa cưới Tân và Trang"
-             onerror="this.src='assets/hero-bg.jpg'"
              class="absolute inset-0 w-full h-full object-cover animate-hero-zoom">
 
         <!-- Warm Romantic Overlay -->
@@ -146,9 +146,8 @@
                 <div class="text-center">
                     <div class="w-44 h-44 sm:w-52 sm:h-52 mx-auto rounded-full p-1.5 border-2 border-champagne/60 shadow-md overflow-hidden bg-cream">
                         <img id="groom-portrait-img"
-                             src="assets/groom.jpg"
+                             src="./assets/groom.jpg"
                              alt="Chú rể Đặng Mạnh Tân"
-                             onerror="this.src='assets/groom.jpg'"
                              class="w-full h-full object-cover rounded-full">
                     </div>
                     <span class="inline-block mt-4 text-xs uppercase tracking-[0.25em] text-champagneDark font-semibold">Chú Rể</span>
@@ -159,9 +158,8 @@
                 <div class="text-center">
                     <div class="w-44 h-44 sm:w-52 sm:h-52 mx-auto rounded-full p-1.5 border-2 border-terracotta/50 shadow-md overflow-hidden bg-cream">
                         <img id="bride-portrait-img"
-                             src="assets/bride.jpg"
+                             src="./assets/bride.jpg"
                              alt="Cô dâu Nguyễn Thị Trang"
-                             onerror="this.src='assets/bride.jpg'"
                              class="w-full h-full object-cover rounded-full">
                     </div>
                     <span class="inline-block mt-4 text-xs uppercase tracking-[0.25em] text-terracotta font-semibold">Cô Dâu</span>
@@ -475,16 +473,16 @@
 
                 <div class="w-48 h-48 mx-auto p-3 bg-white rounded-2xl border border-champagne/30 shadow-inner mb-5">
                     <img id="qr1-image-display"
-                         src="https://placehold.co/250x250/FFFFFF/2A2422?text=QR+Chu+Re"
+                         src="assets/qr1.jpg"
                          alt="Mã QR Chú Rể"
-                         onerror="this.src='https://placehold.co/250x250/FFFFFF/2A2422?text=QR+Chu+Re'"
+                        
                          class="w-full h-full object-contain rounded-xl">
                 </div>
 
                 <div class="space-y-1 text-sm mb-5">
-                    <p id="qr1-bank-display" class="font-semibold text-champagneDark"></p>
-                    <p id="qr1-holder-display" class="font-medium text-charcoal"></p>
-                    <p id="qr1-account-display" class="font-mono text-base font-bold text-terracotta tracking-wider"></p>
+                    <p id="qr1-bank-display" class="font-semibold text-champagneDark">Vietcombank</p>
+                    <p id="qr1-holder-display" class="font-medium text-charcoal">Dang Manh Tan</p>
+                    <p id="qr1-account-display" class="font-mono text-base font-bold text-terracotta tracking-wider">1018687641</p>
                 </div>
 
                 <button type="button" onclick="copyBankAccount('qr1-account-display')" class="px-5 py-2.5 rounded-full bg-champagne hover:bg-champagneDark text-white text-xs font-semibold uppercase tracking-wider transition-all shadow-sm">
@@ -501,16 +499,16 @@
 
                 <div class="w-48 h-48 mx-auto p-3 bg-white rounded-2xl border border-terracotta/25 shadow-inner mb-5">
                     <img id="qr2-image-display"
-                         src="https://placehold.co/250x250/FFFFFF/2A2422?text=QR+Co+Dau"
+                         src="assets/qr2.jpg"
                          alt="Mã QR Cô Dâu"
-                         onerror="this.src='https://placehold.co/250x250/FFFFFF/2A2422?text=QR+Co+Dau'"
+                         
                          class="w-full h-full object-contain rounded-xl">
                 </div>
 
                 <div class="space-y-1 text-sm mb-5">
-                    <p id="qr2-bank-display" class="font-semibold text-terracotta"></p>
-                    <p id="qr2-holder-display" class="font-medium text-charcoal"></p>
-                    <p id="qr2-account-display" class="font-mono text-base font-bold text-terracotta tracking-wider"></p>
+                    <p id="qr2-bank-display" class="font-semibold text-terracotta">Vietcombank</p>
+                    <p id="qr2-holder-display" class="font-medium text-charcoal">Nguyen Thi Trang</p>
+                    <p id="qr2-account-display" class="font-mono text-base font-bold text-terracotta tracking-wider">1018687642</p>
                 </div>
 
                 <button type="button" onclick="copyBankAccount('qr2-account-display')" class="px-5 py-2.5 rounded-full bg-terracotta hover:bg-terracottaDark text-white text-xs font-semibold uppercase tracking-wider transition-all shadow-sm">
