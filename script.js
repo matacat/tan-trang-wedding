@@ -6,10 +6,26 @@
         // Kept as a no-op for compatibility with optional controls in the source template.
         function persistState() {}
 
+        // Image fallback: report the exact missing path and avoid retry loops.
+        const IMAGE_FALLBACK = "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(
+            '<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600"><rect width="100%" height="100%" fill="#FAF7F2"/><text x="50%" y="48%" text-anchor="middle" fill="#8B3A3A" font-family="Arial" font-size="28">Không tải được ảnh</text><text x="50%" y="56%" text-anchor="middle" fill="#6E635F" font-family="Arial" font-size="16">Kiểm tra tên file trong thư mục assets</text></svg>'
+        );
+
+        function setWeddingImage(img, src) {
+            if (!img) return;
+            img.onerror = function () {
+                console.error("[Thiệp cưới] Không tải được ảnh:", this.src,
+                    "| Hãy kiểm tra đúng tên file và chữ hoa/chữ thường trong thư mục assets.");
+                this.onerror = null;
+                this.src = IMAGE_FALLBACK;
+            };
+            img.src = src;
+        }
+
         // 2. RENDER ENTIRE WEDDING PAGE
         function renderPage() {
             // Hero
-            document.getElementById("hero-bg-img").src = state.heroBg;
+            setWeddingImage(document.getElementById("hero-bg-img"), state.heroBg);
             document.getElementById("hero-groom-name").textContent = state.groomShort;
             document.getElementById("hero-bride-name").textContent = state.brideShort;
             document.getElementById("hero-lunar-display").textContent = state.lunarDate;
@@ -23,8 +39,8 @@
             // Invitation & Portraits
             document.getElementById("invitation-body-text").textContent = state.invitationText;
             document.getElementById("thank-you-body-text").textContent = state.thankYouText;
-            document.getElementById("groom-portrait-img").src = state.groomAvatar;
-            document.getElementById("bride-portrait-img").src = state.brideAvatar;
+            setWeddingImage(document.getElementById("groom-portrait-img"), state.groomAvatar);
+            setWeddingImage(document.getElementById("bride-portrait-img"), state.brideAvatar);
             document.getElementById("groom-fullname-display").textContent = state.groomFull;
             document.getElementById("bride-fullname-display").textContent = state.brideFull;
             document.getElementById("footer-groom-text").textContent = state.groomShort;
@@ -229,10 +245,17 @@
                 card.className = "group relative aspect-[4/5] rounded-2xl overflow-hidden bg-ivory border border-champagne/25 shadow-sm focus:outline-none";
                 card.innerHTML = `
                     <img src="${src}" alt="Ảnh cưới ${idx + 1}"
-                         onerror="this.src='https://placehold.co/600x750/FAF7F2/8B3A3A?text=Anh+Cuoi+${idx + 1}'"
                          class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                     <div class="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors"></div>
                 `;
+                const albumImage = card.querySelector("img");
+                albumImage.onerror = function () {
+                    console.error("[Thiệp cưới] Không tải được ảnh album:", this.src,
+                        "| Kiểm tra tên file assets/1.jpg ... assets/6.jpg.");
+                    this.onerror = null;
+                    this.src = IMAGE_FALLBACK;
+                    card.onclick = null;
+                };
                 grid.appendChild(card);
             });
         }
