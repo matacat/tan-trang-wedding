@@ -1,0 +1,83 @@
+body {
+            background-color: #FAF7F2;
+            color: #2A2422;
+            font-family: 'Be Vietnam Pro', sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* Hero subtle slow zoom */
+        @keyframes kenBurnsSlow {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.06); }
+            100% { transform: scale(1); }
+        }
+        .animate-hero-zoom {
+            animation: kenBurnsSlow 22s ease-in-out infinite;
+        }
+
+        /* Pure CSS falling petals */
+        @keyframes petalFall {
+            0% {
+                transform: translateY(-10vh) translateX(0) rotate(0deg);
+                opacity: 0;
+            }
+            15% { opacity: 0.75; }
+            85% { opacity: 0.75; }
+            100% {
+                transform: translateY(105vh) translateX(45px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        .petal {
+            position: fixed;
+            top: -5vh;
+            width: 12px;
+            height: 16px;
+            background: radial-gradient(circle at 30% 30%, #FCE7E7, #EAB8B8);
+            border-radius: 150% 0 150% 0;
+            pointer-events: none;
+            z-index: 30;
+            animation: petalFall linear infinite;
+        }
+
+        /* Modern Countdown Digit Tick & Tabular Numbers */
+        .tabular-nums {
+            font-variant-numeric: tabular-nums;
+        }
+        @keyframes digitTick {
+            0% {
+                opacity: 0.4;
+                transform: translateY(-5px) scale(0.96);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+        .animate-digit-tick {
+            animation: digitTick 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        /* Disc spin for music player */
+        @keyframes spinDisc {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        .animate-disc {
+            animation: spinDisc 8s linear infinite;
+        }
+        .paused-disc {
+            animation-play-state: paused;
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #FAF7F2;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #C5A059;
+            border-radius: 999px;
+        }
