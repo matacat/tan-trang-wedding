@@ -11,7 +11,7 @@ window.WEDDING_CONFIG = {
   "brideFull": "Nguyễn Thị Trang",
   "weddingDate": "2027-01-17",
   "weddingTime": "09:00",
-  "lunarDate": "10/12/2026",
+  "lunarDate": "Ngày 10 tháng 12 năm Bính Ngọ",
   "invitationText": "Trân trọng kính mời Quý vị và các bạn đến chung vui, chúc phúc cho ngày trọng đại của Tân và Trang. Sự hiện diện của Quý vị là niềm vinh hạnh và hạnh phúc của chúng tôi.",
   "thankYouText": "Tân và Trang chân thành cảm ơn Quý vị đã dành thời gian đến chung vui và gửi những lời chúc tốt đẹp. Sự hiện diện của Quý vị là món quà quý giá đối với chúng tôi.",
   "groomAddress": "Thôn 13, Xã Hải Anh, Tỉnh Ninh Bình",
