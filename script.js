@@ -22,6 +22,16 @@
             img.src = src;
         }
 
+
+        // Chỉ lấy dữ liệu từ config khi phần tử HTML chưa có nội dung.
+        function setTextIfEmpty(elementId, configValue) {
+            const element = document.getElementById(elementId);
+            if (!element) return;
+            if (!element.textContent.trim() && configValue != null) {
+                element.textContent = String(configValue);
+            }
+        }
+
         // 2. RENDER ENTIRE WEDDING PAGE
         function renderPage() {
             // Hero
@@ -49,24 +59,28 @@
             // 3 Events
             document.getElementById("ev1-time-display").textContent = state.ev1Time;
             document.getElementById("ev1-date-display").textContent = state.ev1Date;
-            document.getElementById("ev1-location-display").textContent = state.ev1Location;
-            document.getElementById("ev1-map-btn").href = `https://maps.google.com/?q=${encodeURIComponent(state.ev1Location)}`;
+            setTextIfEmpty("ev1-location-display", state.ev1Location);
+            document.getElementById("ev1-map-btn").href = `https://maps.google.com/?q=${encodeURIComponent(state.ev1Location || document.getElementById("ev1-location-display").textContent.trim())}`;
 
             document.getElementById("ev2-time-display").textContent = state.ev2Time;
             document.getElementById("ev2-date-display").textContent = state.ev2Date;
-            document.getElementById("ev2-location-display").textContent = state.ev2Location;
-            document.getElementById("ev2-map-btn").href = `https://maps.google.com/?q=${encodeURIComponent(state.ev2Location)}`;
+            setTextIfEmpty("ev2-location-display", state.ev2Location);
+            document.getElementById("ev2-map-btn").href = `https://maps.google.com/?q=${encodeURIComponent(state.ev2Location || document.getElementById("ev2-location-display").textContent.trim())}`;
 
             document.getElementById("ev3-time-display").textContent = state.ev3Time;
             document.getElementById("ev3-date-display").textContent = state.ev3Date;
-            document.getElementById("ev3-location-display").textContent = state.ev3Location;
-            document.getElementById("ev3-map-btn").href = `https://maps.google.com/?q=${encodeURIComponent(state.ev3Location)}`;
+            setTextIfEmpty("ev3-location-display", state.ev3Location);
+            document.getElementById("ev3-map-btn").href = `https://maps.google.com/?q=${encodeURIComponent(state.ev3Location || document.getElementById("ev3-location-display").textContent.trim())}`;
 
-            // Family Addresses (Only Addresses)
-            document.getElementById("groom-address-display").textContent = state.groomAddress;
-            document.getElementById("bride-address-display").textContent = state.brideAddress;
-            document.getElementById("groom-gmap-link").href = `https://maps.google.com/?q=${encodeURIComponent(state.groomAddress)}`;
-            document.getElementById("bride-gmap-link").href = `https://maps.google.com/?q=${encodeURIComponent(state.brideAddress)}`;
+            // Family address text: preserve HTML when present.
+            setTextIfEmpty("groom-address-display", state.groomAddress);
+            setTextIfEmpty("bride-address-display", state.brideAddress);
+
+            // Map nhà trai follows ev2Location; map nhà gái follows ev3Location.
+            const groomMapLocation = state.ev2Location || state.groomAddress;
+            const brideMapLocation = state.ev3Location || state.brideAddress;
+            document.getElementById("groom-gmap-link").href = `https://maps.google.com/?q=${encodeURIComponent(groomMapLocation)}`;
+            document.getElementById("bride-gmap-link").href = `https://maps.google.com/?q=${encodeURIComponent(brideMapLocation)}`;
             selectMapTab("groom");
 
             // Calendar & Countdown
@@ -212,11 +226,11 @@
         // 5. INTERACTIVE MAP SWITCHER
         function selectMapTab(type) {
             const addressMap = {
-                groom: state.groomAddress,
-                bride: state.brideAddress,
+                groom: state.ev2Location || state.groomAddress,
+                bride: state.ev3Location || state.brideAddress,
                 church: state.ev1Location
             };
-            const targetAddress = addressMap[type] || state.groomAddress;
+            const targetAddress = addressMap[type] || state.ev2Location || state.groomAddress;
 
             ["groom", "bride", "church"].forEach(key => {
                 const btn = document.getElementById(`map-btn-${key}`);
@@ -235,29 +249,51 @@
         }
 
         // 6. PHOTO ALBUM & LIGHTBOX
-        function renderAlbumGrid() {
+        // Chỉ cần thêm assets/7.jpg, assets/8.jpg...; không cần sửa config.js.
+        function imageExists(src) {
+            return new Promise(resolve => {
+                const probe = new Image();
+                probe.onload = () => resolve(true);
+                probe.onerror = () => resolve(false);
+                probe.src = src;
+            });
+        }
+
+        async function renderAlbumGrid() {
             const grid = document.getElementById("album-grid");
             grid.innerHTML = "";
-            state.album.forEach((src, idx) => {
+
+            const maxAlbumImages = 100;
+            let foundCount = 0;
+
+            // Quét tuần tự từ 1.jpg và dừng ở số đầu tiên không tồn tại.
+            for (let number = 1; number <= maxAlbumImages; number++) {
+                const src = `assets/${number}.jpg`;
+                const exists = await imageExists(src);
+
+                if (!exists) {
+                    if (number === 1) {
+                        grid.innerHTML = '<p class="col-span-full text-sm text-muted text-center py-6">Chưa tìm thấy ảnh album. Hãy thêm ảnh dạng assets/1.jpg, assets/2.jpg...</p>';
+                    }
+                    break;
+                }
+
+                foundCount++;
                 const card = document.createElement("button");
                 card.type = "button";
                 card.onclick = () => openLightbox(src);
                 card.className = "group relative aspect-[4/5] rounded-2xl overflow-hidden bg-ivory border border-champagne/25 shadow-sm focus:outline-none";
                 card.innerHTML = `
-                    <img src="${src}" alt="Ảnh cưới ${idx + 1}"
+                    <img src="${src}" alt="Ảnh cưới ${number}"
                          class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                     <div class="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors"></div>
                 `;
-                const albumImage = card.querySelector("img");
-                albumImage.onerror = function () {
-                    console.error("[Thiệp cưới] Không tải được ảnh album:", this.src,
-                        "| Kiểm tra tên file assets/1.jpg ... assets/6.jpg.");
-                    this.onerror = null;
-                    this.src = IMAGE_FALLBACK;
-                    card.onclick = null;
-                };
                 grid.appendChild(card);
-            });
+            }
+
+            if (foundCount === maxAlbumImages) {
+                console.info(`[Thiệp cưới] Đã đạt giới hạn quét ${maxAlbumImages} ảnh album.`);
+            }
         }
 
         function openLightbox(src) {

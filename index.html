@@ -131,12 +131,11 @@
             <div class="pointer-events-none absolute bottom-4 right-4 w-12 h-12 border-b-2 border-r-2 border-champagne/50 rounded-br-2xl"></div>
 
             <div class="text-center max-w-2xl mx-auto">
-                <span class="text-xs uppercase tracking-[0.3em] text-champagneDark font-semibold">Trân Trọng Kính Mời</span>
                 <h2 class="font-serif text-3xl sm:text-5xl text-terracotta font-semibold mt-2">Lời Mời Tham Dự</h2>
                 <div class="w-20 h-0.5 bg-champagne/50 mx-auto my-5"></div>
 
                 <p id="invitation-body-text" class="text-sm sm:text-base text-charcoal/90 leading-relaxed whitespace-pre-line">
-                    Trân trọng kính mời Quý vị và các bạn đến chung vui, chúc phúc cho ngày trọng đại của Tân và Trang. Sự hiện diện của Quý vị là niềm vinh hạnh và hạnh phúc của chúng tôi.
+                    <!-- Trân trọng kính mời Quý vị đến chung vui, chúc phúc cho ngày trọng đại của Tân và Trang. Sự hiện diện của Quý vị là niềm vinh hạnh và hạnh phúc của chúng mình. -->
                 </p>
             </div>
 
@@ -316,17 +315,17 @@
                     <span class="inline-block px-3.5 py-1 rounded-full bg-terracotta/10 text-terracotta text-xs font-semibold uppercase tracking-wider mb-4">
                         Tiệc Tối Thân Mật
                     </span>
-                    <h3 class="font-serif text-2xl sm:text-3xl text-charcoal font-bold mb-3">Tối Hôm Sau Ăn Tối</h3>
+                    <h3 class="font-serif text-2xl sm:text-3xl text-charcoal font-bold mb-3">Bữa tối thân tình</h3>
                     <div class="space-y-2 text-sm text-charcoal/85">
                         <p class="font-semibold text-terracotta" id="ev2-time-display">18:00 PM</p>
                         <p id="ev2-date-display">Thứ Bảy, 16/01/2027</p>
                         <p class="text-muted leading-relaxed pt-1" id="ev2-location-display">
-                            Địa điểm tiệc tối tại nhà trai
+                            Thôn 13, Xã Hải Anh, Tỉnh Ninh Bình
                         </p>
                     </div>
                 </div>
                 <div class="mt-6 pt-4 border-t border-terracotta/15 flex items-center justify-end">
-                    <a id="ev2-map-btn" href="https://maps.google.com/?q=44B+Lý+Thường+Kiệt,+Hoàn+Kiếm,+Hà+Nội" target="_blank" rel="noopener noreferrer" class="px-4 py-2 rounded-full bg-terracotta text-white hover:bg-terracottaDark text-xs font-semibold transition-colors">
+                    <a id="ev2-map-btn" target="_blank" rel="noopener noreferrer" class="px-4 py-2 rounded-full bg-terracotta text-white hover:bg-terracottaDark text-xs font-semibold transition-colors">
                         Chỉ đường tiệc tối ↗
                     </a>
                 </div>
@@ -339,12 +338,12 @@
                     <span class="inline-block px-3.5 py-1 rounded-full bg-champagne/15 text-champagneDark text-xs font-semibold uppercase tracking-wider mb-4">
                         Tiệc Chính Chung Vui
                     </span>
-                    <h3 class="font-serif text-2xl sm:text-3xl text-charcoal font-bold mb-3">Trưa Hôm Sau Ăn Trưa</h3>
+                    <h3 class="font-serif text-2xl sm:text-3xl text-charcoal font-bold mb-3">Bữa trưa thân mật</h3>
                     <div class="space-y-2 text-sm text-charcoal/85">
                         <p class="font-semibold text-terracotta" id="ev3-time-display">11:00 AM</p>
                         <p id="ev3-date-display">Thứ Bảy, 16/01/2027</p>
                         <p class="text-muted leading-relaxed pt-1" id="ev3-location-display">
-                            Địa điểm tiệc trưa tại nhà trai– vui lòng cập nhật
+                            Thôn 13, Xã Hải Anh, Tỉnh Ninh Bình
                         </p>
                     </div>
                 </div>
@@ -382,7 +381,7 @@
                     <button type="button" onclick="selectMapTab('groom')" class="px-4 py-2 rounded-full bg-cream hover:bg-champagne/20 text-champagneDark text-xs font-semibold transition-colors">
                         Hiển thị trên bản đồ
                     </button>
-                    <a id="groom-gmap-link" href="https://maps.google.com/?q=Thôn+13,+Xã+Hải+Anh,+Tỉnh+Ninh+Bình" target="_blank" rel="noopener noreferrer" class="px-4 py-2 rounded-full bg-champagne text-white hover:bg-champagneDark text-xs font-semibold transition-colors">
+                    <a id="groom-gmap-link" href="https://maps.google.com/?q=20.205100,+106.258662" target="_blank" rel="noopener noreferrer" class="px-4 py-2 rounded-full bg-champagne text-white hover:bg-champagneDark text-xs font-semibold transition-colors">
                         Mở Google Maps ↗
                     </a>
                 </div>
@@ -451,8 +450,53 @@
         <div id="album-grid" class="grid grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6"></div>
     </section>
 
+        <!-- ===================================================================== -->
+    <!-- 7. GUESTBOOK WISHES (LỜI CHÚC MỪNG CỦA KHÁCH MỜI)                     -->
     <!-- ===================================================================== -->
-    <!-- 7. DUAL QR WEDDING GIFT BOX (MÃ QR CHUYỂN KHOẢN - 2 MÃ RIÊNG BIỆT)     -->
+    <section id="guestbook-section" class="py-16 sm:py-24 px-4 sm:px-6 max-w-5xl mx-auto">
+        <div class="text-center mb-12">
+            <span class="text-xs uppercase tracking-[0.3em] text-champagneDark font-semibold">Sổ Lưu Bút Hạnh Phúc</span>
+            <h2 class="font-serif text-3xl sm:text-5xl text-terracotta font-semibold mt-2">Lời Chúc Mừng Của Khách Mời</h2>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+            <!-- Form -->
+            <form id="guestbook-form" class="lg:col-span-5 bg-ivory rounded-3xl p-6 sm:p-8 border border-champagne/30 shadow-md space-y-4">
+                <h3 class="font-serif text-2xl text-charcoal font-bold">Gửi Lời Chúc &amp; Xác Nhận</h3>
+                <div>
+                    <label class="block text-xs font-semibold text-muted mb-1">Tên của bạn *</label>
+                    <input type="text" id="guest-name-input" required placeholder="Nhập tên hoặc gia đình bạn..." class="w-full px-4 py-2.5 rounded-xl bg-cream border border-champagne/30 text-sm focus:outline-none focus:border-champagne">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-muted mb-1">Xác nhận tham dự</label>
+                    <select id="guest-attend-input" class="w-full px-4 py-2.5 rounded-xl bg-cream border border-champagne/30 text-sm focus:outline-none focus:border-champagne">
+                        <option value="Sẽ tham dự chung vui">Sẽ tham dự chung vui</option>
+                        <option value="Tham dự cùng gia đình">Tham dự cùng gia đình</option>
+                        <option value="Gửi lời chúc từ xa">Gửi lời chúc từ xa</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-muted mb-1">Lời chúc gửi tới Cô Dâu &amp; Chú Rể *</label>
+                    <textarea id="guest-message-input" rows="4" required placeholder="Viết lời chúc tốt đẹp của bạn..." class="w-full px-4 py-2.5 rounded-xl bg-cream border border-champagne/30 text-sm focus:outline-none focus:border-champagne"></textarea>
+                </div>
+                <button type="submit" class="w-full py-3 rounded-full bg-terracotta hover:bg-terracottaDark text-white text-xs font-semibold uppercase tracking-widest transition-all shadow-md">
+                    Gửi Lời Chúc Ngay
+                </button>
+            </form>
+
+            <!-- Wishes List -->
+            <div class="lg:col-span-7 bg-ivory rounded-3xl p-6 sm:p-8 border border-champagne/30 shadow-md">
+                <div class="flex items-center justify-between border-b border-champagne/20 pb-4 mb-5">
+                    <h3 class="font-serif text-2xl text-charcoal font-bold">Những Lời Chúc Yêu Thương</h3>
+                    <span id="wishes-count-badge" class="px-3 py-1 rounded-full bg-champagne/15 text-champagneDark text-xs font-semibold">0 lời chúc</span>
+                </div>
+                <div id="wishes-list-container" class="space-y-4 max-h-[26rem] overflow-y-auto pr-1"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- 8. DUAL QR WEDDING GIFT BOX (MÃ QR CHUYỂN KHOẢN - 2 MÃ RIÊNG BIỆT)     -->
     <!-- ===================================================================== -->
     <section id="gift-section" class="py-16 sm:py-24 px-4 sm:px-6 max-w-5xl mx-auto">
         <div class="text-center mb-12">
@@ -514,51 +558,6 @@
                 <button type="button" onclick="copyBankAccount('qr2-account-display')" class="px-5 py-2.5 rounded-full bg-terracotta hover:bg-terracottaDark text-white text-xs font-semibold uppercase tracking-wider transition-all shadow-sm">
                     Sao chép số tài khoản
                 </button>
-            </div>
-        </div>
-    </section>
-
-    <!-- ===================================================================== -->
-    <!-- 8. GUESTBOOK WISHES (LỜI CHÚC MỪNG CỦA KHÁCH MỜI)                     -->
-    <!-- ===================================================================== -->
-    <section id="guestbook-section" class="py-16 sm:py-24 px-4 sm:px-6 max-w-5xl mx-auto">
-        <div class="text-center mb-12">
-            <span class="text-xs uppercase tracking-[0.3em] text-champagneDark font-semibold">Sổ Lưu Bút Hạnh Phúc</span>
-            <h2 class="font-serif text-3xl sm:text-5xl text-terracotta font-semibold mt-2">Lời Chúc Mừng Của Khách Mời</h2>
-        </div>
-
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-            <!-- Form -->
-            <form id="guestbook-form" class="lg:col-span-5 bg-ivory rounded-3xl p-6 sm:p-8 border border-champagne/30 shadow-md space-y-4">
-                <h3 class="font-serif text-2xl text-charcoal font-bold">Gửi Lời Chúc &amp; Xác Nhận</h3>
-                <div>
-                    <label class="block text-xs font-semibold text-muted mb-1">Tên của bạn *</label>
-                    <input type="text" id="guest-name-input" required placeholder="Nhập tên hoặc gia đình bạn..." class="w-full px-4 py-2.5 rounded-xl bg-cream border border-champagne/30 text-sm focus:outline-none focus:border-champagne">
-                </div>
-                <div>
-                    <label class="block text-xs font-semibold text-muted mb-1">Xác nhận tham dự</label>
-                    <select id="guest-attend-input" class="w-full px-4 py-2.5 rounded-xl bg-cream border border-champagne/30 text-sm focus:outline-none focus:border-champagne">
-                        <option value="Sẽ tham dự chung vui">Sẽ tham dự chung vui</option>
-                        <option value="Tham dự cùng gia đình">Tham dự cùng gia đình</option>
-                        <option value="Gửi lời chúc từ xa">Gửi lời chúc từ xa</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-xs font-semibold text-muted mb-1">Lời chúc gửi tới Cô Dâu &amp; Chú Rể *</label>
-                    <textarea id="guest-message-input" rows="4" required placeholder="Viết lời chúc tốt đẹp của bạn..." class="w-full px-4 py-2.5 rounded-xl bg-cream border border-champagne/30 text-sm focus:outline-none focus:border-champagne"></textarea>
-                </div>
-                <button type="submit" class="w-full py-3 rounded-full bg-terracotta hover:bg-terracottaDark text-white text-xs font-semibold uppercase tracking-widest transition-all shadow-md">
-                    Gửi Lời Chúc Ngay
-                </button>
-            </form>
-
-            <!-- Wishes List -->
-            <div class="lg:col-span-7 bg-ivory rounded-3xl p-6 sm:p-8 border border-champagne/30 shadow-md">
-                <div class="flex items-center justify-between border-b border-champagne/20 pb-4 mb-5">
-                    <h3 class="font-serif text-2xl text-charcoal font-bold">Những Lời Chúc Yêu Thương</h3>
-                    <span id="wishes-count-badge" class="px-3 py-1 rounded-full bg-champagne/15 text-champagneDark text-xs font-semibold">0 lời chúc</span>
-                </div>
-                <div id="wishes-list-container" class="space-y-4 max-h-[26rem] overflow-y-auto pr-1"></div>
             </div>
         </div>
     </section>
