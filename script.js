@@ -34,6 +34,9 @@
 
         // 2. RENDER ENTIRE WEDDING PAGE
         function renderPage() {
+            // Album render trước và độc lập: lỗi ở phần khác không làm mất album.
+            try { renderAlbumGrid(); } catch (err) { console.error("[Thiệp cưới] Lỗi render album:", err); }
+
             // Hero
             setWeddingImage(document.getElementById("hero-bg-img"), state.heroBg);
             document.getElementById("hero-groom-name").textContent = state.groomShort;
@@ -60,17 +63,14 @@
             document.getElementById("ev1-time-display").textContent = state.ev1Time;
             document.getElementById("ev1-date-display").textContent = state.ev1Date;
             setTextIfEmpty("ev1-location-display", state.ev1Location);
-            document.getElementById("ev1-map-btn").href = `https://maps.google.com/?q=${encodeURIComponent(state.ev1Location || document.getElementById("ev1-location-display").textContent.trim())}`;
 
             document.getElementById("ev2-time-display").textContent = state.ev2Time;
             document.getElementById("ev2-date-display").textContent = state.ev2Date;
             setTextIfEmpty("ev2-location-display", state.ev2Location);
-            document.getElementById("ev2-map-btn").href = `https://maps.google.com/?q=${encodeURIComponent(state.ev2Location || document.getElementById("ev2-location-display").textContent.trim())}`;
 
             document.getElementById("ev3-time-display").textContent = state.ev3Time;
             document.getElementById("ev3-date-display").textContent = state.ev3Date;
             setTextIfEmpty("ev3-location-display", state.ev3Location);
-            document.getElementById("ev3-map-btn").href = `https://maps.google.com/?q=${encodeURIComponent(state.ev3Location || document.getElementById("ev3-location-display").textContent.trim())}`;
 
             // Family address text: preserve HTML when present.
             setTextIfEmpty("groom-address-display", state.groomAddress);
@@ -86,9 +86,6 @@
             // Calendar & Countdown
             renderMonthlyCalendar(state.weddingDate);
             setupCountdown(state.weddingDate, state.weddingTime);
-
-            // Album
-            renderAlbumGrid();
 
             // 2 QR Codes
             document.getElementById("qr1-title-display").textContent = state.qr1Title;
@@ -249,62 +246,97 @@
         }
 
         // 6. PHOTO ALBUM & LIGHTBOX
-        // Chỉ cần thêm assets/7.jpg, assets/8.jpg...; không cần sửa config.js.
-        function imageExists(src) {
-            return new Promise(resolve => {
-                const probe = new Image();
-                probe.onload = () => resolve(true);
-                probe.onerror = () => resolve(false);
-                probe.src = src;
-            });
+        // Danh sách ảnh lấy trực tiếp từ config.js (state.album).
+        // Khi thêm ảnh: chép file vào assets/ rồi thêm đường dẫn vào mảng album trong config.js.
+        // Tự tìm album theo tên assets/1.jpg, assets/2.jpg... để sau này
+        // chỉ cần chép ảnh mới vào assets mà không phải sửa config.js.
+        async function getAlbumImageList() {
+            const configured = Array.isArray(state.album)
+                ? state.album.filter(src => typeof src === "string" && src.trim()).map(src => src.trim())
+                : [];
+            const numbered = [];
+            let foundAny = false;
+            let missingStreak = 0;
+
+            // Dò số thứ tự liên tục; dừng sau 5 số trống liên tiếp để tránh request vô hạn.
+            for (let number = 1; number <= 100; number++) {
+                const src = `assets/${number}.jpg`;
+                const exists = await new Promise(resolve => {
+                    const probe = new Image();
+                    probe.onload = () => resolve(true);
+                    probe.onerror = () => resolve(false);
+                    probe.src = `${src}?album_check=1`;
+                });
+                if (exists) {
+                    numbered.push(src);
+                    foundAny = true;
+                    missingStreak = 0;
+                } else if (foundAny) {
+                    missingStreak++;
+                    if (missingStreak >= 5) break;
+                }
+            }
+
+            // Ảnh đặt tên số được ưu tiên; vẫn hỗ trợ đường dẫn tùy chỉnh trong config.
+            const combined = [...numbered, ...configured];
+            return [...new Set(combined)];
         }
 
         async function renderAlbumGrid() {
             const grid = document.getElementById("album-grid");
-            grid.innerHTML = "";
+            if (!grid) return;
+            grid.replaceChildren();
+            grid.innerHTML = '<p class="col-span-full text-sm text-muted text-center py-6">Đang tải album ảnh...</p>';
 
-            const maxAlbumImages = 100;
-            let foundCount = 0;
+            const albumImages = await getAlbumImageList();
+            grid.replaceChildren();
+            if (!albumImages.length) {
+                grid.innerHTML = '<p class="col-span-full text-sm text-muted text-center py-6">Chưa tìm thấy ảnh. Hãy đặt ảnh dạng assets/1.jpg, assets/2.jpg... trong thư mục assets.</p>';
+                return;
+            }
 
-            // Quét tuần tự từ 1.jpg và dừng ở số đầu tiên không tồn tại.
-            for (let number = 1; number <= maxAlbumImages; number++) {
-                const src = `assets/${number}.jpg`;
-                const exists = await imageExists(src);
-
-                if (!exists) {
-                    if (number === 1) {
-                        grid.innerHTML = '<p class="col-span-full text-sm text-muted text-center py-6">Chưa tìm thấy ảnh album. Hãy thêm ảnh dạng assets/1.jpg, assets/2.jpg...</p>';
-                    }
-                    break;
-                }
-
-                foundCount++;
+            albumImages.forEach((src, index) => {
                 const card = document.createElement("button");
                 card.type = "button";
-                card.onclick = () => openLightbox(src);
-                card.className = "group relative aspect-[4/5] rounded-2xl overflow-hidden bg-ivory border border-champagne/25 shadow-sm focus:outline-none";
-                card.innerHTML = `
-                    <img src="${src}" alt="Ảnh cưới ${number}"
-                         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-                    <div class="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors"></div>
-                `;
-                grid.appendChild(card);
-            }
+                card.className = "group relative aspect-[4/5] rounded-2xl overflow-hidden bg-ivory border border-champagne/25 shadow-sm focus:outline-none focus:ring-2 focus:ring-champagne";
+                card.setAttribute("aria-label", `Mở ảnh cưới ${index + 1}`);
+                card.addEventListener("click", () => openLightbox(src));
 
-            if (foundCount === maxAlbumImages) {
-                console.info(`[Thiệp cưới] Đã đạt giới hạn quét ${maxAlbumImages} ảnh album.`);
-            }
+                const img = document.createElement("img");
+                img.src = src;
+                img.alt = `Ảnh cưới ${index + 1}`;
+                img.loading = "lazy";
+                img.decoding = "async";
+                img.className = "w-full h-full object-cover group-hover:scale-105 transition-transform duration-500";
+                img.addEventListener("error", () => {
+                    card.remove();
+                    console.error(`[Thiệp cưới] Không tải được ảnh album: ${src}. Kiểm tra đường dẫn và chữ hoa/chữ thường.`);
+                }, { once: true });
+
+                const shade = document.createElement("span");
+                shade.className = "absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors pointer-events-none";
+                card.append(img, shade);
+                grid.appendChild(card);
+            });
         }
 
         function openLightbox(src) {
-            document.getElementById("lightbox-img").src = src;
+            const image = document.getElementById("lightbox-img");
             const modal = document.getElementById("lightbox-modal");
+            if (!image || !modal) return;
+
+            image.onerror = () => {
+                console.error("[Thiệp cưới] Không tải được ảnh phóng to:", src);
+                closeLightbox();
+            };
+            image.src = src;
             modal.classList.remove("hidden");
             modal.classList.add("flex");
         }
 
         function closeLightbox() {
             const modal = document.getElementById("lightbox-modal");
+            if (!modal) return;
             modal.classList.add("hidden");
             modal.classList.remove("flex");
         }

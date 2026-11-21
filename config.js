@@ -1,9 +1,4 @@
-/*
-  CONFIG THIỆP CƯỚI TÂN & TRANG
-  Chỉnh sửa các giá trị trong file này, lưu lại rồi push lên GitHub.
-  Ảnh: đặt trong thư mục assets/ và ghi đường dẫn, ví dụ assets/anh-bia.jpg
-  Nhạc: đặt file MP3 tại assets/music.mp3 hoặc đổi musicSrc bên dưới.
-*/
+
 window.WEDDING_CONFIG = {
   "groomShort": "Tân",
   "brideShort": "Trang",
@@ -30,14 +25,9 @@ window.WEDDING_CONFIG = {
   "heroBg": "assets/hero-bg.jpg",
   "groomAvatar": "assets/groom.jpg",
   "brideAvatar": "assets/bride.jpg",
+
   "album": [
-    "assets/1.jpg",
-    "assets/2.jpg",
-    "assets/3.jpg",
-    "assets/4.jpg",
-    "assets/5.jpg",
-    "assets/6.jpg",
-    "assets/7.jpg"
+  
   ],
   "qr1Title": "Chú rể · Tân",
   "qr1Bank": "MB bank",
